@@ -20,8 +20,20 @@ import lombok.Setter;
 @Table(name = "producto")
 public class ProductEntity {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "ID_PRODUCTO")
+    private long idProduct;
 
+    @Column(name = "NOMBRE")
+    public String name;
 
+    @Column(name = "PRECIO")
+    public int price;
 
+    @Column(name = "CATEGORIA_ID")
+    public int category_id;
 
+    @Column(name = "USER_FINAL")
+    public int userFinal;
 }
