@@ -1,4 +1,4 @@
-package com.project.ecommerce.products.entities;
+package com.project.ecommerce.product.entity;
 
 
 import jakarta.persistence.Column;
@@ -8,17 +8,13 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Entity
-@Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "producto")
-public class ProductEntity {
+@Table(name = "product")
+public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,9 +27,27 @@ public class ProductEntity {
     @Column(name = "PRECIO")
     public int price;
 
-    @Column(name = "CATEGORIA_ID")
-    public int category_id;
+    public long getIdProduct() {
+        return idProduct;
+    }
 
-    @Column(name = "USER_FINAL")
-    public int userFinal;
+    public void setIdProduct(long idProduct) {
+        this.idProduct = idProduct;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getPrice() {
+        return price;
+    }
+
+    public void setPrice(int price) {
+        this.price = price;
+    }
 }
