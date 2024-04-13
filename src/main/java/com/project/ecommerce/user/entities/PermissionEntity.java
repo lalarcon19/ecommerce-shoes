@@ -1,4 +1,4 @@
-package com.project.ecommerce.products.entities;
+package com.project.ecommerce.user.entities;
 
 
 import jakarta.persistence.Column;
@@ -8,35 +8,24 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Getter
 @Setter
+@Getter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "producto")
-public class ProductEntity {
-    @Id
-    @GeneratedValue
-    public long id;
+@Table(name = "permissions")
+public class PermissionEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID_PRODUCTO")
-    private long idProduct;
+    private Long id;
 
-    @Column(name = "NOMBRE")
-    public String name;
-
-    @Column(name = "PRECIO")
-    public int price;
-
-    @Column(name = "CATEGORIA_ID")
-    public int category_id;
-
-    @Column(name = "USER_FINAL")
-    public int userFinal;
+    @Column(name = "name", nullable = false, updatable = false)
+    private String name;
 }
