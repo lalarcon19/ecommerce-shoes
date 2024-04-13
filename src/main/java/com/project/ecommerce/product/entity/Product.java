@@ -1,4 +1,4 @@
-package com.project.ecommerce.products.entities;
+package com.project.ecommerce.product.entity;
 
 
 import jakarta.persistence.Column;
@@ -19,9 +19,6 @@ import lombok.Setter;
 @AllArgsConstructor
 @Table(name = "producto")
 public class ProductEntity {
-    @Id
-    @GeneratedValue
-    public long id;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
