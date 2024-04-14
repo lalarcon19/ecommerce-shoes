@@ -22,15 +22,15 @@ public class FavoriteEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID_FAVORITOS")
-    private int id_favorite;
+    private int idFavorite;
 
     @Column(name = "NOMBRE_PRODUCTO")
     public String nombreProducto;
 
     @Column(name = "PRECIO_PRODUCTO")
-    public int price_product;
+    public int priceProduct;
 
     @Column(name = "PRODUCTO_ID")
-    public int product_id;
+    public int productId;
 
 }

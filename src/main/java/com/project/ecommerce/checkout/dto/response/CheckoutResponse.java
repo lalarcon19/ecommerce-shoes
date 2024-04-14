@@ -1,4 +1,4 @@
-package com.project.ecommerce.checkout.dto.request;
+package com.project.ecommerce.checkout.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -8,12 +8,11 @@ import lombok.Setter;
 import java.awt.*;
 import java.util.Date;
 
-@Getter
 @Setter
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class CheckoutRequest {
-
+public class CheckoutResponse {
     private int idInvoice;
 
     private int totalPrice;

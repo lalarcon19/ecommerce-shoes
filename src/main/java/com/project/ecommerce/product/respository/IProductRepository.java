@@ -1,13 +1,13 @@
 package com.project.ecommerce.product.respository;
 
-import com.project.ecommerce.product.entity.Product;
+import com.project.ecommerce.product.entity.ProductEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
 @Repository
-public interface IProductRepository extends JpaRepository<Product, Long> {
-    Product findProductByIdProduct(long idProduct);
-    Optional<Product> findByName(String name);
+public interface IProductRepository extends JpaRepository<ProductEntity, Long> {
+    ProductEntity findProductByIdProduct(long idProduct);
+    Optional<ProductEntity> findByName(String name);
 }

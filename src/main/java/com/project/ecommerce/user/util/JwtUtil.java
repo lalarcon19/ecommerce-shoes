@@ -68,5 +68,3 @@ public class JwtUtil {
         return decodedJWT.getClaims();
     }
 }
-
-

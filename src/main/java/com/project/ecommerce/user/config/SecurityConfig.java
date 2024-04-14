@@ -1,5 +1,5 @@
 package com.project.ecommerce.user.config;
-
+/*
 import com.project.ecommerce.user.config.filter.JwtTokenValidator;
 import com.project.ecommerce.user.service.impl.UserImpl;
 import com.project.ecommerce.user.util.JwtUtil;
@@ -67,3 +67,5 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 }
+
+ */
