@@ -10,7 +10,7 @@ import java.util.Optional;
 @Repository
 public interface FavoriteRepository extends JpaRepository<FavoriteEntity, Long> {
 
-    FavoriteEntity findFavoriteByIdProduct(long id_favorite);
+    //FavoriteEntity findFavoriteByIdProduct(long id_favorite);
     Optional<FavoriteEntity> findByIdFavorite(long id_favorite);
 
 }

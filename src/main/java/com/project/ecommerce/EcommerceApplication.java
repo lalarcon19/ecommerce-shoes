@@ -9,6 +9,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 // import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.List;
@@ -49,7 +50,7 @@ public class EcommerceApplication {
 
 			UserEntity userPruebas = UserEntity.builder()
 					.username("admin")
-					.password("1234")
+					.password(new BCryptPasswordEncoder().encode("1234"))
 					.isEnabled(true)
 					.accountNoExpired(true)
 					.accountNoLocked(true)
@@ -59,7 +60,7 @@ public class EcommerceApplication {
 
 			UserEntity userPruebas1 = UserEntity.builder()
 					.username("user")
-					.password("1234")
+					.password(new BCryptPasswordEncoder().encode("1234"))
 					.isEnabled(true)
 					.accountNoExpired(true)
 					.accountNoLocked(true)
