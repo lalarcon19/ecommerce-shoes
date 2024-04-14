@@ -2,7 +2,7 @@ package com.project.ecommerce.user.service.impl;
 
 import com.project.ecommerce.user.dto.request.UserRequest;
 import com.project.ecommerce.user.dto.response.UserResponse;
-import com.project.ecommerce.user.entity.UserEntity;
+import com.project.ecommerce.user.entity.User;
 import com.project.ecommerce.user.respository.IUserRepository;
 import com.project.ecommerce.user.service.IUserService;
 import com.project.ecommerce.utils.exception.ApiException;
@@ -33,12 +33,12 @@ public class UserImpl implements IUserService {
     public UserResponse createUser(UserRequest userRequest) throws ApiException {
         logger.info("---El servidor ingresa al servicio para crear un usuario");
         try {
-            Optional<UserEntity> userDocument = userRepository.findByDocument(userRequest.getDocument());
+            Optional<User> userDocument = userRepository.findByDocument(userRequest.getDocument());
             if (userDocument.isPresent()){
                 logger.info("---El usuario ya existe---");
                 throw new ApiException("El usuario ya existe", HttpStatus.CONFLICT);
             }
-            UserEntity user = mapper.map(userRequest, UserEntity.class);
+            User user = mapper.map(userRequest, User.class);
             userRepository.saveAndFlush(user);
             logger.info("---Se guardo correctamente el usuario en base de datos");
             return mapper.map(user, UserResponse.class);
@@ -49,7 +49,7 @@ public class UserImpl implements IUserService {
 
     @Override
     public List<UserResponse> getAllUsers() throws ApiException {
-        List<UserEntity> listUser;
+        List<User> listUser;
         try{
             logger.info("---Entro al servicio para buscar usuarios registrados---");
             listUser = userRepository.findAll();
@@ -63,7 +63,7 @@ public class UserImpl implements IUserService {
         }
         logger.info("---No hay usuarios registrados---");
         return listUser.stream()
-                .map(userEntity -> mapper.map(userEntity, UserResponse.class))
+                .map(user -> mapper.map(user, UserResponse.class))
                 .collect(Collectors.toList());
     }
 
@@ -71,11 +71,11 @@ public class UserImpl implements IUserService {
     public UserResponse getByDocument(String document) throws ApiException {
         try {
             logger.info("---Se conecto al servicio para buscar por documento un usuario---");
-            Optional<UserEntity> userByDocument = userRepository.findByDocument(document);
+            Optional<User> userByDocument = userRepository.findByDocument(document);
             if (userByDocument.isPresent()){
                 logger.info("---Se encontro useario con documento {} en base de datos----", document);
-                UserEntity user = userByDocument.get();
-                return mapper.map((user, UserResponse.class);
+                User user = userByDocument.get();
+                return mapper.map(user, UserResponse.class);
             }else {
                 logger.info("---El usuario con el documento {} no se encontro registrado", document);
                 throw new ApiException("el usuario no se encuentra registrado", HttpStatus.NOT_FOUND);
@@ -90,7 +90,7 @@ public class UserImpl implements IUserService {
     public UserResponse updateUser(long idUser, UserRequest userRequest) throws ApiException {
         try{
             logger.info("---Entro al servicio para actualizar usuario---");
-            UserEntity user = userRepository.findByIdUser(idUser);
+            User user = userRepository.findByIdUser(idUser);
             if (user != null){
             user.setName(userRequest.getName());
             user.setLastName(userRequest.getLastName());
@@ -117,9 +117,9 @@ public class UserImpl implements IUserService {
     public void deleteUser(String document) throws ApiException {
         try {
             logger.info("---Entro al servicio para eliminar usuario---");
-            Optional<UserEntity> userEntityOptional = userRepository.findByDocument(document);
+            Optional<User> userEntityOptional = userRepository.findByDocument(document);
             if(userEntityOptional.isPresent()){
-                UserEntity user = userEntityOptional.get();
+                User user = userEntityOptional.get();
                 userRepository.delete(user);
                 logger.info("---El usuario selecionado, fue eliminado correctamente---");
                 throw new ApiException("usuario eliminado correctamente", HttpStatus.OK);

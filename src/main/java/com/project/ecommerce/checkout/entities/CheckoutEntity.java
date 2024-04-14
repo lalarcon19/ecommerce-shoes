@@ -34,7 +34,7 @@ public class CheckoutEntity {
     public Date dateInvoice;
 
     @Column(name = "NUMERO_FACTURA")
-    public String nameInvoice;
+    public String numberInvoice;
 
     @Column(name = "DESCRIPCION")
     public TextArea text;

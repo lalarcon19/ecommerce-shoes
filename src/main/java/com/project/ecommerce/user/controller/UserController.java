@@ -32,34 +32,34 @@ public class UserController {
     IUserService userService;
 
     @PostMapping("/create")
-    public ResponseEntity<UserResponse> createProduct (
+    public ResponseEntity<UserResponse> createUser(
             @RequestBody UserRequest userRequest) throws ApiException {
         UserResponse response = userService.createUser(userRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @GetMapping("/getAll")
-    public ResponseEntity<List<UserResponse>> getAllProducts () throws ApiException{
+    public ResponseEntity<List<UserResponse>> getAllUsers() throws ApiException{
         List<UserResponse> response = userService.getAllUsers();
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    @GetMapping("/getByName/{name}")
-    public ResponseEntity<UserResponse> getProductByName (
+    @GetMapping("/getBy/{name}")
+    public ResponseEntity<UserResponse> getUserByDocument (
             @PathVariable String document)throws ApiException{
         UserResponse response = userService.getByDocument(document);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    @PatchMapping("/updateProduct/{idUser}")
-    public ResponseEntity<UserResponse>  updateProduct(
+    @PatchMapping("/updateUser/{idUser}")
+    public ResponseEntity<UserResponse>  updateUser(
             @PathVariable long idUser, @RequestBody UserRequest userRequest) throws ApiException{
         UserResponse response = userService.updateUser(idUser, userRequest);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    @DeleteMapping("/deleteProduct/{document}")
-    public ResponseEntity<String> deleteProduct (@PathVariable String document)throws ApiException{
+    @DeleteMapping("/deleteUser/{document}")
+    public ResponseEntity<String> deleteUser(@PathVariable String document)throws ApiException{
         userService.deleteUser(document);
         return ResponseEntity.status(HttpStatus.OK).build();
     }

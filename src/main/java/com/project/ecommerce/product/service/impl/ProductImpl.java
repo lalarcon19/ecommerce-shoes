@@ -1,9 +1,9 @@
 package com.project.ecommerce.product.service.impl;
 
+import com.project.ecommerce.product.entity.ProductEntity;
 import com.project.ecommerce.utils.exception.ApiException;
 import com.project.ecommerce.product.dto.request.ProductRequest;
 import com.project.ecommerce.product.dto.response.ProductResponse;
-import com.project.ecommerce.product.entity.Product;
 import com.project.ecommerce.product.respository.IProductRepository;
 import com.project.ecommerce.product.service.IProductService;
 import org.modelmapper.ModelMapper;
@@ -33,23 +33,23 @@ public class ProductImpl implements IProductService {
     public ProductResponse createProduct(ProductRequest productRequest) throws ApiException {
         logger.info("---El servidor ingresa al servicio para crear un producto----");
         try {
-            Optional<Product> productName = productRepository.findByName(productRequest.getName());
+            Optional<ProductEntity> productName = productRepository.findByName(productRequest.getName());
             if (productName.isPresent()) {
                 logger.info("----El producto a crear, ya existe en la tienda----");
                 throw new ApiException("El producto ya existe en la tienda", HttpStatus.CONFLICT);
             }
-            Product product = mapper.map(productRequest, Product.class);
+            ProductEntity product = mapper.map(productRequest, ProductEntity.class);
             productRepository.saveAndFlush(product);
             logger.info("---Se guardo correctamente el producto en base de datos----");
             return mapper.map(product, ProductResponse.class);
         } catch (Exception e){
-            throw new ApiException("Se produjo un error", HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new ApiException(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @Override
     public List<ProductResponse> getAllProducts() throws ApiException {
-        List<Product> listProduct;
+        List<ProductEntity> listProduct;
         try {
             logger.info("----Entro al servicio para buscar productos existentes");
             listProduct = productRepository.findAll();
@@ -71,10 +71,10 @@ public class ProductImpl implements IProductService {
     public ProductResponse getByName(String name) throws ApiException{
         try {
             logger.info("---Se conecto el servicio para traer producto por nombre---");
-            Optional<Product> productByName = productRepository.findByName(name);
+            Optional<ProductEntity> productByName = productRepository.findByName(name);
             if (productByName.isPresent()) {
                 logger.info("---Se encontro el producto con nombre {} en base de datos---", name);
-                Product product = productByName.get();
+                ProductEntity product = productByName.get();
                 return mapper.map(product, ProductResponse.class);
             }else {
                 logger.info("---El producto con el nombre {} no se encontro en la tienda",name);
@@ -90,7 +90,7 @@ public class ProductImpl implements IProductService {
     public ProductResponse updateProduct(long idProduct, ProductRequest productRequest) throws ApiException {
         try {
             logger.info("---Entro al servicio para actualizar producto---");
-             Product product = productRepository.findProductByIdProduct(idProduct);
+             ProductEntity product = productRepository.findProductByIdProduct(idProduct);
             if (product != null) {
                 product.setName(productRequest.getName());
                 product.setPrice(productRequest.getPrice());
@@ -114,9 +114,9 @@ public class ProductImpl implements IProductService {
     public void deleteProduct(String name) throws ApiException {
         try{
             logger.info("---Entro al servicio para eliminar producto---");
-            Optional<Product> productOptional = productRepository.findByName(name);
+            Optional<ProductEntity> productOptional = productRepository.findByName(name);
             if (productOptional.isPresent()){
-                Product product = productOptional.get();
+                ProductEntity product = productOptional.get();
                 productRepository.delete(product);
                 logger.info("---El producto sellecionado, fue eliminado correctamente---");
                 throw new ApiException("Producto eliminado correctamente", HttpStatus.OK);

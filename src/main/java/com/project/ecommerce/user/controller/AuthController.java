@@ -1,5 +1,5 @@
 package com.project.ecommerce.user.controller;
-
+/*
 import com.project.ecommerce.user.dto.AuthLoginRequest;
 import com.project.ecommerce.user.dto.AuthResponse;
 import com.project.ecommerce.user.service.impl.UserDetailServiceImpl;
@@ -24,3 +24,5 @@ public class AuthController {
         return new ResponseEntity<>(this.userDetailService.loginUser(userRequest), HttpStatus.OK);
     }
 }
+
+ */
