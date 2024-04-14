@@ -11,4 +11,6 @@ public interface IUserRepository extends JpaRepository<UserEntity, Long> {
 
     Optional<UserEntity> findByDocument(String document);
     UserEntity findByIdUser (long idUser);
+
+    Optional<UserEntity> findUserEntityByUsername(String username);
 }

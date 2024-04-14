@@ -1,4 +1,4 @@
-package com.project.ecommerce.user.entities;
+package com.project.ecommerce.user.entity;
 
 import com.project.ecommerce.user.util.RoleEnum;
 import jakarta.persistence.CascadeType;

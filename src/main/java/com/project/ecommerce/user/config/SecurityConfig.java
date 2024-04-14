@@ -1,9 +1,8 @@
 package com.project.ecommerce.user.config;
 
 import com.project.ecommerce.user.config.filter.JwtTokenValidator;
-import com.project.ecommerce.user.service.impl.UserDetailServiceImpl;
+import com.project.ecommerce.user.service.impl.UserImpl;
 import com.project.ecommerce.user.util.JwtUtil;
-import com.project.ecommerce.user.util.RoleEnum;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,20 +15,11 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -48,12 +38,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(http -> {
                     //Configurar endpoints publico
                     http.requestMatchers(HttpMethod.POST, "/auth/**").permitAll();
-
-                    //configurar endpoints privados
-                    http.requestMatchers(HttpMethod.GET, "/test/helloSecured").hasAnyRole("ADMIN", "USER");
-
-                    //configurar endpoints privados
-                    http.requestMatchers(HttpMethod.GET, "/test/helloSecured2").hasAuthority("READ");
+                    http.requestMatchers(HttpMethod.GET, "/users/getAll").hasAnyRole("ADMIN", "USER");
 
                     //Configurar endpoints no especificados
                     http.anyRequest().denyAll();
@@ -68,7 +53,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AuthenticationProvider authenticationProvider(UserDetailServiceImpl userDetailService) {
+    public AuthenticationProvider authenticationProvider(UserImpl userDetailService) {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
 
         provider.setPasswordEncoder(passwordEncoder());

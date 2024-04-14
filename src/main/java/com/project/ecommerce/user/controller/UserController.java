@@ -1,8 +1,5 @@
 package com.project.ecommerce.user.controller;
 
-import com.project.ecommerce.product.dto.request.ProductRequest;
-import com.project.ecommerce.product.dto.response.ProductResponse;
-import com.project.ecommerce.product.service.IProductService;
 import com.project.ecommerce.user.dto.request.UserRequest;
 import com.project.ecommerce.user.dto.response.UserResponse;
 import com.project.ecommerce.user.service.IUserService;
@@ -30,13 +27,6 @@ public class UserController {
 
     @Autowired
     IUserService userService;
-
-    @PostMapping("/create")
-    public ResponseEntity<UserResponse> createProduct (
-            @RequestBody UserRequest userRequest) throws ApiException {
-        UserResponse response = userService.createUser(userRequest);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
-    }
 
     @GetMapping("/getAll")
     public ResponseEntity<List<UserResponse>> getAllProducts () throws ApiException{
