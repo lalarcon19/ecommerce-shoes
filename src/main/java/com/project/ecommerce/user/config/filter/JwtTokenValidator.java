@@ -1,5 +1,5 @@
 package com.project.ecommerce.user.config.filter;
-/*
+
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.project.ecommerce.user.util.JwtUtil;
 import jakarta.servlet.FilterChain;
@@ -53,5 +53,3 @@ public class JwtTokenValidator extends OncePerRequestFilter {
 
     }
 }
-
- */
