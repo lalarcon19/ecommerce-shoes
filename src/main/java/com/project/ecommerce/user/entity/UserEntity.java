@@ -1,25 +1,36 @@
 package com.project.ecommerce.user.entity;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Entity
+@Setter
+@Getter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "USUARIO")
+@Table(name = "user")
 public class UserEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID_USUARIO")
     private long idUser;
 
     @Column(name = "NOMBRE")
@@ -31,9 +42,6 @@ public class UserEntity {
     @Column(name = "CORREO_ELECTRONICO")
     private String email;
 
-    @Column(name = "CONTRASEÑA")
-    private String password;
-
     @Column(name = "TIPO_CEDULA")
     private String type_document;
 
@@ -43,67 +51,23 @@ public class UserEntity {
     @Column(name = "DIRECCION")
     private String address;
 
-    public long getIdUser() {
-        return idUser;
-    }
+    @Column(unique = true)
+    private String username;
+    private String password;
 
-    public void setIdUser(long idUser) {
-        this.idUser = idUser;
-    }
+    @Column(name = "is_Enabled")
+    private boolean isEnabled;
 
-    public String getName() {
-        return name;
-    }
+    @Column(name = "account_No_Expired")
+    private boolean accountNoExpired;
 
-    public void setName(String name) {
-        this.name = name;
-    }
+    @Column(name = "account_No_Locked")
+    private boolean accountNoLocked;
 
-    public String getLastName() {
-        return lastName;
-    }
+    @Column(name = "credential_No_Expire")
+    private boolean credentialNoExpire;
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getType_document() {
-        return type_document;
-    }
-
-    public void setType_document(String type_document) {
-        this.type_document = type_document;
-    }
-
-    public String getDocument() {
-        return document;
-    }
-
-    public void setDocument(String document) {
-        this.document = document;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Set<RoleEntity> roles = new HashSet<>();
 }
