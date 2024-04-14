@@ -1,8 +1,5 @@
 package com.project.ecommerce.user.controller;
 
-import com.project.ecommerce.product.dto.request.ProductRequest;
-import com.project.ecommerce.product.dto.response.ProductResponse;
-import com.project.ecommerce.product.service.IProductService;
 import com.project.ecommerce.user.dto.request.UserRequest;
 import com.project.ecommerce.user.dto.response.UserResponse;
 import com.project.ecommerce.user.service.IUserService;
@@ -31,35 +28,28 @@ public class UserController {
     @Autowired
     IUserService userService;
 
-    @PostMapping("/create")
-    public ResponseEntity<UserResponse> createUser(
-            @RequestBody UserRequest userRequest) throws ApiException {
-        UserResponse response = userService.createUser(userRequest);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
-    }
-
     @GetMapping("/getAll")
-    public ResponseEntity<List<UserResponse>> getAllUsers() throws ApiException{
+    public ResponseEntity<List<UserResponse>> getAllProducts () throws ApiException{
         List<UserResponse> response = userService.getAllUsers();
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    @GetMapping("/getBy/{name}")
-    public ResponseEntity<UserResponse> getUserByDocument (
+    @GetMapping("/getByName/{name}")
+    public ResponseEntity<UserResponse> getProductByName (
             @PathVariable String document)throws ApiException{
         UserResponse response = userService.getByDocument(document);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    @PatchMapping("/updateUser/{idUser}")
-    public ResponseEntity<UserResponse>  updateUser(
+    @PatchMapping("/updateProduct/{idUser}")
+    public ResponseEntity<UserResponse>  updateProduct(
             @PathVariable long idUser, @RequestBody UserRequest userRequest) throws ApiException{
         UserResponse response = userService.updateUser(idUser, userRequest);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    @DeleteMapping("/deleteUser/{document}")
-    public ResponseEntity<String> deleteUser(@PathVariable String document)throws ApiException{
+    @DeleteMapping("/deleteProduct/{document}")
+    public ResponseEntity<String> deleteProduct (@PathVariable String document)throws ApiException{
         userService.deleteUser(document);
         return ResponseEntity.status(HttpStatus.OK).build();
     }

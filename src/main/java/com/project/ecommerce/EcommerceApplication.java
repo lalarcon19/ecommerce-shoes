@@ -1,10 +1,10 @@
 package com.project.ecommerce;
 
+import com.project.ecommerce.user.respository.IUserRepository;
 import com.project.ecommerce.user.util.RoleEnum;
-import com.project.ecommerce.user.entities.PermissionEntity;
-import com.project.ecommerce.user.entities.RoleEntity;
-import com.project.ecommerce.user.entities.UserEntity;
-import com.project.ecommerce.user.respository.UserRepository;
+import com.project.ecommerce.user.entity.PermissionEntity;
+import com.project.ecommerce.user.entity.RoleEntity;
+import com.project.ecommerce.user.entity.UserEntity;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -22,7 +22,7 @@ public class EcommerceApplication {
 	}
 
 	@Bean
-	CommandLineRunner runner(UserRepository userRepository) {
+	CommandLineRunner runner(IUserRepository userRepository) {
 		return args -> {
 			PermissionEntity createPermission = PermissionEntity.builder()
 					.name("CREATE")
@@ -35,9 +35,6 @@ public class EcommerceApplication {
 					.build();
 			PermissionEntity deletePermission = PermissionEntity.builder()
 					.name("DELETE")
-					.build();
-			PermissionEntity refactorPermission = PermissionEntity.builder()
-					.name("REFACTOR")
 					.build();
 
 			RoleEntity roleAdmin = RoleEntity.builder()

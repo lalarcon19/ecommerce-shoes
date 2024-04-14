@@ -1,7 +1,11 @@
 package com.project.ecommerce.user.dto.response;
 
+import com.project.ecommerce.user.entity.RoleEntity;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -22,6 +26,16 @@ public class UserResponse {
     private String document;
 
     private String address;
+
+    private Set<RoleEntity> roles = new HashSet<>();
+
+    public Set<RoleEntity> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<RoleEntity> roles) {
+        this.roles = roles;
+    }
 
     public long getIdUser() {
         return idUser;

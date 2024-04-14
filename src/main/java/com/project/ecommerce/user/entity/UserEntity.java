@@ -1,4 +1,4 @@
-package com.project.ecommerce.user.entities;
+package com.project.ecommerce.user.entity;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -27,11 +27,10 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "user")
-public class UserEntity {
+public class User{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID_USUARIO")
     private long idUser;
 
     @Column(name = "NOMBRE")
@@ -43,18 +42,14 @@ public class UserEntity {
     @Column(name = "CORREO_ELECTRONICO")
     private String email;
 
-    @Column(name = "CONTRASEÑA")
-    private String contraseña;
-
     @Column(name = "TIPO_CEDULA")
-    private String tipoCedula;
+    private String type_document;
 
     @Column(name = "NUMERO_CEDULA")
-    private String numeroCedula;
+    private String document;
 
     @Column(name = "DIRECCION")
-    private String direccion;
-    private Long id;
+    private String address;
 
     @Column(unique = true)
     private String username;

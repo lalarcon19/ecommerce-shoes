@@ -1,4 +1,4 @@
-package com.project.ecommerce.user.dto;
+package com.project.ecommerce.user.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
