@@ -12,7 +12,7 @@ import lombok.Setter;
 public class FavoriteResponse {
     private int idFavorite;
 
-    public String nombreProducto;
+    public String nameProduct;
 
     public int priceProduct;
 

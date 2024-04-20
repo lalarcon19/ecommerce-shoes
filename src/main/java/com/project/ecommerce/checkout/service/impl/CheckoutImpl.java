@@ -5,6 +5,7 @@ import com.project.ecommerce.checkout.dto.response.CheckoutResponse;
 import com.project.ecommerce.checkout.entities.CheckoutEntity;
 import com.project.ecommerce.checkout.respository.CheckoutRepository;
 import com.project.ecommerce.checkout.service.ICheckoutService;
+import com.project.ecommerce.utils.enums.Status;
 import com.project.ecommerce.utils.exception.ApiException;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
@@ -35,6 +36,7 @@ public class CheckoutImpl implements ICheckoutService {
         try{
            CheckoutEntity checkout = mapper.map(checkoutRequest, CheckoutEntity.class);
            checkoutRepository.saveAndFlush(checkout);
+           checkout.setOrderStatus(Status.CREADO);
            logger.info("---Se creo correctamente la factura en base de datos---");
            return mapper.map(checkout, CheckoutResponse.class);
         }catch (Exception e){

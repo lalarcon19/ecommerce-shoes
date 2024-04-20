@@ -13,7 +13,7 @@ public class FavoriteRequest {
 
     private int idFavorite;
 
-    public String nombreProducto;
+    public String nameProduct;
 
     public int priceProduct;
 

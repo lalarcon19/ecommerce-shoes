@@ -12,4 +12,6 @@ public interface IFavoriteService {
 
     FavoriteResponse addFavorite(FavoriteRequest favoriteRequest) throws ApiException;
     List<FavoriteResponse> getAllFavorites() throws ApiException;
+    FavoriteResponse getById(long idFavorite)throws ApiException;
+    void deleteFavorite(long idFavorite)throws ApiException;
 }

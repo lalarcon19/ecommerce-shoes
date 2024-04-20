@@ -38,10 +38,15 @@ public class SecurityConfig {
                 .authorizeHttpRequests(http -> {
                     //Configurar endpoints publico
                     http.requestMatchers(HttpMethod.POST, "/auth/**").permitAll();
-                    http.requestMatchers(HttpMethod.GET, "/users/getAll").hasAnyRole("ADMIN", "USER");
+                   //http.requestMatchers(HttpMethod.GET, "/users/**").hasAnyRole("ADMIN");
+                   //http.requestMatchers(HttpMethod.POST, "/users/**").hasAnyRole("ADMIN");
+                   //http.requestMatchers(HttpMethod.PUT, "/users/**").hasAnyRole("ADMIN");
+                   //http.requestMatchers(HttpMethod.DELETE, "/users/**").hasAnyRole("ADMIN");
+                   //http.requestMatchers(HttpMethod.GET, "/products/**").hasAnyRole("ADMIN", "USER");
+
 
                     //Configurar endpoints no especificados
-                    http.anyRequest().denyAll();
+                    http.anyRequest().permitAll();
                 })
                 .addFilterBefore(new JwtTokenValidator(jwtUtil), BasicAuthenticationFilter.class)
                 .build();

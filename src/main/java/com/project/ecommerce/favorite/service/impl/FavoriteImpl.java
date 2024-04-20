@@ -2,8 +2,8 @@ package com.project.ecommerce.favorite.service.impl;
 
 import com.project.ecommerce.favorite.dto.request.FavoriteRequest;
 import com.project.ecommerce.favorite.dto.response.FavoriteResponse;
-import com.project.ecommerce.favorite.entities.FavoriteEntity;
 import com.project.ecommerce.favorite.repository.FavoriteRepository;
+import com.project.ecommerce.favorite.entities.FavoriteEntity;
 import com.project.ecommerce.favorite.service.IFavoriteService;
 import com.project.ecommerce.utils.exception.ApiException;
 import org.modelmapper.ModelMapper;
@@ -64,6 +64,45 @@ public class FavoriteImpl implements IFavoriteService {
         return listEntity.stream()
                 .map(favoriteEntity -> mapper.map(favoriteEntity, FavoriteResponse.class))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public FavoriteResponse getById(long idFavorite) throws ApiException {
+        try{
+            logger.info("---Se conecto para traer los productos favoritos del usuario");
+            Optional<FavoriteEntity> favoriteById = favoriteRepository.findByIdFavorite(idFavorite);
+            if(favoriteById.isPresent()){
+                logger.info("Se ubico producto en la lista de favoritos del usuario");
+                FavoriteEntity favorite = favoriteById.get();
+                return mapper.map(favorite, FavoriteResponse.class);
+            }else{
+                logger.info("---No se encontro producto en la lista de favorito del usuario con ese nombre");
+                throw new ApiException("No se encontro producto en favoritos", HttpStatus.NOT_FOUND);
+            }
+        }catch (Exception e){
+            logger.info("---Se produjo un error al buscar producto en la lista de favoritos");
+            throw  new ApiException(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @Override
+    public void deleteFavorite(long idFavorite) throws ApiException {
+        try{
+            logger.info("---Entro al servicio para eliminar producto de la lista del usuario---");
+            Optional<FavoriteEntity> favoriteOptional = favoriteRepository.findByIdFavorite(idFavorite);
+            if (favoriteOptional.isPresent()){
+                FavoriteEntity favorite = favoriteOptional.get();
+                favoriteRepository.delete(favorite);
+                logger.info("---EL producto seleccionado, fue eliminado correctamente---");
+                throw new ApiException("Producto eliminado correctamente", HttpStatus.OK);
+            }else{
+                logger.info("---El producto ya no existe en la lista");
+                throw new ApiException("El producto ya no existe en la lista",HttpStatus.NOT_FOUND);
+            }
+        }catch (Exception e){
+            logger.info("---Se produjo un error al eliminar producto seleccionado---");
+            throw new ApiException(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
 
