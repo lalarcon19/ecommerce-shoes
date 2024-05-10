@@ -10,10 +10,12 @@ import java.util.List;
 @Service
 public interface ICheckoutService {
 
-    CheckoutResponse createCheckout (CheckoutRequest request) throws ApiException;
-    List<CheckoutResponse> getAllCheckout() throws ApiException;
-    CheckoutResponse getByNumberInvoice (String numberInvoice) throws ApiException;
-    CheckoutResponse updateCheckout(long idInvoice, CheckoutRequest request) throws ApiException;
-    void deleteCheckout(String numberInvoice) throws ApiException;
+    void createCheckout(CheckoutRequest request);
+
+    List<CheckoutResponse> getAllCheckout();
+
+    CheckoutResponse getByNumberInvoice(String numberInvoice);
+
+    void deleteCheckout(String numberInvoice);
 
 }

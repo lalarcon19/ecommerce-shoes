@@ -5,8 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.awt.*;
-import java.util.Date;
+import java.util.List;
 
 @Getter
 @Setter
@@ -14,17 +13,12 @@ import java.util.Date;
 @NoArgsConstructor
 public class CheckoutRequest {
 
-    private int idInvoice;
-
     private int totalPrice;
 
-    public Date dateInvoice;
+    private String description;
 
-    public String nameInvoice;
+    private int userId;
 
-    public TextArea text;
+    private List<Long> products;
 
-    public int user_id;
-
-    public int payment;
 }

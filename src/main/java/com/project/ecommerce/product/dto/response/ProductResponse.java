@@ -1,6 +1,8 @@
 package com.project.ecommerce.product.dto.response;
 
+import com.project.ecommerce.utils.enums.CategoryEnum;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -9,21 +11,10 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class ProductResponse {
-    private long idProduct;
+    private long id;
     public String name;
     public int price;
-    public int category_id;
-    public int userFinal;
-
-    @Override
-    public String toString() {
-        return "ProductResponse{" +
-                "idProduct=" + idProduct +
-                ", name='" + name + '\'' +
-                ", price=" + price +
-                ", category_id=" + category_id +
-                ", userFinal=" + userFinal +
-                '}';
-    }
+    public CategoryEnum category;
 }

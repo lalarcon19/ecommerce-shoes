@@ -1,29 +1,36 @@
 package com.project.ecommerce.checkout.dto.response;
 
+import com.project.ecommerce.payments.dto.response.PaymentResponse;
+import com.project.ecommerce.payments.entity.Payment;
+import com.project.ecommerce.user.dto.response.UserResponse;
+import com.project.ecommerce.utils.enums.Status;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.awt.*;
 import java.util.Date;
 
 @Setter
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class CheckoutResponse {
-    private int idInvoice;
+    private int id;
 
     private int totalPrice;
 
+    private Status orderStatus;
+
     public Date dateInvoice;
 
-    public String nameInvoice;
+    public String numberInvoice;
 
-    public TextArea text;
+    public String description;
 
-    public int user_id;
+    public UserResponse userId;
 
-    public int payment;
+    public PaymentResponse payment;
 }
