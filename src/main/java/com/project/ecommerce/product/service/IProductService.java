@@ -1,6 +1,5 @@
 package com.project.ecommerce.product.service;
 
-import com.project.ecommerce.utils.exception.ApiException;
 import com.project.ecommerce.product.dto.request.ProductRequest;
 import com.project.ecommerce.product.dto.response.ProductResponse;
 import org.springframework.stereotype.Service;
@@ -9,14 +8,16 @@ import java.util.List;
 
 @Service
 public interface IProductService {
-    ProductResponse createProduct (ProductRequest productRequest) throws ApiException;
+    void create(ProductRequest productRequest);
 
-    List<ProductResponse> getAllProducts() throws ApiException;
+    List<ProductResponse> getAll();
 
-    ProductResponse getByName(String name) throws ApiException;
+    ProductResponse getByName(String name);
 
-    ProductResponse updateProduct(long idProduct, ProductRequest productRequest) throws ApiException;
+    ProductResponse getById(long id);
 
-    void deleteProduct(String name)throws ApiException;
+    void update(long id, ProductRequest productRequest);
+
+    void delete(String name);
 
 }

@@ -1,9 +1,14 @@
 package com.project.ecommerce;
 
-import com.project.ecommerce.user.respository.IUserRepository;
-import com.project.ecommerce.user.util.RoleEnum;
-import com.project.ecommerce.user.entity.PermissionEntity;
-import com.project.ecommerce.user.entity.RoleEntity;
+import com.project.ecommerce.category.entity.Category;
+import com.project.ecommerce.category.repository.CategoryRepository;
+import com.project.ecommerce.utils.enums.CategoryEnum;
+import com.project.ecommerce.product.entity.Product;
+import com.project.ecommerce.product.respository.ProductRepository;
+import com.project.ecommerce.user.respository.UserRepository;
+import com.project.ecommerce.utils.enums.RoleEnum;
+import com.project.ecommerce.user.entity.Permission;
+import com.project.ecommerce.user.entity.Role;
 import com.project.ecommerce.user.entity.UserEntity;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -22,27 +27,27 @@ public class EcommerceApplication {
 	}
 
 	@Bean
-	CommandLineRunner runner(IUserRepository userRepository) {
+	CommandLineRunner runner(UserRepository userRepository, ProductRepository productRepository, CategoryRepository categoryRepository) {
 		return args -> {
-			PermissionEntity createPermission = PermissionEntity.builder()
+			Permission createPermission = Permission.builder()
 					.name("CREATE")
 					.build();
-			PermissionEntity readPermission = PermissionEntity.builder()
+			Permission readPermission = Permission.builder()
 					.name("READ")
 					.build();
-			PermissionEntity updatePermission = PermissionEntity.builder()
+			Permission updatePermission = Permission.builder()
 					.name("UPDATE")
 					.build();
-			PermissionEntity deletePermission = PermissionEntity.builder()
+			Permission deletePermission = Permission.builder()
 					.name("DELETE")
 					.build();
 
-			RoleEntity roleAdmin = RoleEntity.builder()
+			Role roleAdmin = Role.builder()
 					.roleEnum(RoleEnum.ADMIN)
 					.permissionEntities(Set.of(createPermission, readPermission, updatePermission, deletePermission))
 					.build();
 
-			RoleEntity roleUser = RoleEntity.builder()
+			Role roleUser = Role.builder()
 					.roleEnum(RoleEnum.USER)
 					.permissionEntities(Set.of(readPermission))
 					.build();
@@ -67,6 +72,44 @@ public class EcommerceApplication {
 					.roles(Set.of(roleUser))
 					.build();
 
+			Category category1 = Category.builder()
+					.name(CategoryEnum.DEPORTIVOS)
+					.description("DEPORTIVOS")
+					.build();
+
+			Category category2 = Category.builder()
+					.name(CategoryEnum.CASUALES)
+					.description("CASUALES")
+					.build();
+
+			Category category3 = Category.builder()
+					.name(CategoryEnum.ELEGANTES)
+					.description("ELEGANTES")
+					.build();
+
+
+			Product product1 = Product.builder()
+					.name("product1")
+					.price(1000)
+					.category(category1)
+					.build();
+
+			Product product2 = Product.builder()
+					.name("product2")
+					.price(1000)
+					.category(category2)
+					.build();
+
+			Product product3 = Product.builder()
+					.name("product3")
+					.price(1000)
+					.category(category3)
+					.build();
+
+
+
+			categoryRepository.saveAllAndFlush(List.of(category1, category2, category3));
+			productRepository.saveAllAndFlush(List.of(product1, product2, product3));
 			userRepository.saveAll(List.of(userPruebas, userPruebas1));
 
 		};

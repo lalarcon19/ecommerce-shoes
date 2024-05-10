@@ -15,6 +15,7 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -32,21 +33,50 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity
-                .csrf(csrf -> csrf.disable())
+                .csrf(AbstractHttpConfigurer::disable)
                 .httpBasic(Customizer.withDefaults())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(http -> {
                     //Configurar endpoints publico
-                    http.requestMatchers(HttpMethod.POST, "/auth/**").permitAll();
-                   //http.requestMatchers(HttpMethod.GET, "/users/**").hasAnyRole("ADMIN");
-                   //http.requestMatchers(HttpMethod.POST, "/users/**").hasAnyRole("ADMIN");
-                   //http.requestMatchers(HttpMethod.PUT, "/users/**").hasAnyRole("ADMIN");
-                   //http.requestMatchers(HttpMethod.DELETE, "/users/**").hasAnyRole("ADMIN");
-                   //http.requestMatchers(HttpMethod.GET, "/products/**").hasAnyRole("ADMIN", "USER");
+                    http.requestMatchers(HttpMethod.POST, "/user/auth/**").permitAll();
 
+                    //Configurar endpoints de usuario
+                    http.requestMatchers(HttpMethod.GET, "/user/**").hasAuthority("READ");
+                    http.requestMatchers(HttpMethod.PUT, "/user/**").hasAuthority("UPDATE");
+                    http.requestMatchers(HttpMethod.DELETE, "/user/**").hasRole("ADMIN");
+
+                    //Configurar endpoints de producto
+                    http.requestMatchers(HttpMethod.GET, "/product/**").hasAuthority("READ");
+                    http.requestMatchers(HttpMethod.POST, "/product/**").hasRole("ADMIN");
+                    http.requestMatchers(HttpMethod.PUT, "/product/**").hasRole("ADMIN");
+                    http.requestMatchers(HttpMethod.DELETE, "/product/**").hasRole("ADMIN");
+
+                    //Configurar endpoints de wishlist
+                    http.requestMatchers(HttpMethod.GET, "/wishlist/**").hasAuthority("READ");
+                    http.requestMatchers(HttpMethod.POST, "/wishlist/**").hasAuthority("CREATE");
+                    http.requestMatchers(HttpMethod.PUT, "/wishlist/**").hasAuthority("UPDATE");
+                    http.requestMatchers(HttpMethod.DELETE, "/wishlist/**").hasRole("ADMIN");
+
+                    //Configurar endpoints de checkout
+                    http.requestMatchers(HttpMethod.GET, "/checkout/**").hasAuthority("READ");
+                    http.requestMatchers(HttpMethod.POST, "/checkout/**").hasAuthority("CREATE");
+                    http.requestMatchers(HttpMethod.PUT, "/checkout/**").hasAuthority("UPDATE");
+                    http.requestMatchers(HttpMethod.DELETE, "/checkout/**").hasRole("ADMIN");
+
+                    //Configurar endpoints de category
+                    http.requestMatchers(HttpMethod.GET, "/category/**").hasAuthority("READ");
+                    http.requestMatchers(HttpMethod.POST, "/category/**").hasAuthority("CREATE");
+                    http.requestMatchers(HttpMethod.PUT, "/category/**").hasAuthority("UPDATE");
+                    http.requestMatchers(HttpMethod.DELETE, "/category/**").hasRole("ADMIN");
+
+                    //Configurar endpoints de payment
+                    http.requestMatchers(HttpMethod.GET, "/payment/**").hasAuthority("READ");
+                    http.requestMatchers(HttpMethod.POST, "/payment/**").hasAuthority("CREATE");
+                    http.requestMatchers(HttpMethod.PUT, "/payment/**").hasAuthority("UPDATE");
+                    http.requestMatchers(HttpMethod.DELETE, "/payment/**").hasRole("ADMIN");
 
                     //Configurar endpoints no especificados
-                    http.anyRequest().permitAll();
+                    http.anyRequest().denyAll();
                 })
                 .addFilterBefore(new JwtTokenValidator(jwtUtil), BasicAuthenticationFilter.class)
                 .build();

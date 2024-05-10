@@ -6,6 +6,7 @@ import com.project.ecommerce.checkout.service.ICheckoutService;
 import com.project.ecommerce.product.dto.request.ProductRequest;
 import com.project.ecommerce.product.dto.response.ProductResponse;
 import com.project.ecommerce.utils.exception.ApiException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,47 +20,39 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.util.List;
 
 @Controller
 @RequestMapping("/checkout")
-@CrossOrigin(origins = "*",  methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.DELETE, RequestMethod.OPTIONS}, allowedHeaders = "*")
+@CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.DELETE, RequestMethod.OPTIONS}, allowedHeaders = "*")
+@RequiredArgsConstructor
 public class CheckoutController {
 
-    @Autowired
-    ICheckoutService checkoutService;
-
-    @PostMapping("/checkout")
-    public ResponseEntity<CheckoutResponse> createInvoice (
-            @RequestBody CheckoutRequest checkoutRequest) throws ApiException {
-        CheckoutResponse response = checkoutService.createCheckout(checkoutRequest);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
-    }
+    private final ICheckoutService checkoutService;
 
     @GetMapping("/getAll")
-    public ResponseEntity<List<CheckoutResponse>> getAllCheckouts () throws ApiException{
-        List<CheckoutResponse> checkoutResponse = checkoutService.getAllCheckout();
-        return ResponseEntity.status(HttpStatus.OK).body(checkoutResponse);
+    @ResponseStatus(HttpStatus.OK)
+    public List<CheckoutResponse> getAllCheckouts() {
+        return checkoutService.getAllCheckout();
     }
 
-    @GetMapping("/getByNumberInvoice/{numberInvoice}")
-    public ResponseEntity<CheckoutResponse> getCheckoutByNumber (
-            @PathVariable String numberInvoice)throws ApiException{
-        CheckoutResponse response = checkoutService.getByNumberInvoice(numberInvoice);
-        return ResponseEntity.status(HttpStatus.OK).body(response);
+    @GetMapping("/getByNumber/{numberInvoice}")
+    @ResponseStatus(HttpStatus.OK)
+    public CheckoutResponse getByNumber(@PathVariable String numberInvoice) {
+        return checkoutService.getByNumberInvoice(numberInvoice);
     }
 
-    @PatchMapping("/updateProduct/{idProduct}")
-    public ResponseEntity<CheckoutResponse>  updateProduct(
-            @PathVariable long idInvoice, @RequestBody CheckoutRequest checkoutRequest) throws ApiException{
-        CheckoutResponse checkoutResponse = checkoutService.updateCheckout(idInvoice, checkoutRequest);
-        return ResponseEntity.status(HttpStatus.OK).body(checkoutResponse);
+    @PostMapping("/create")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void createInvoice(@RequestBody CheckoutRequest checkoutRequest) {
+        checkoutService.createCheckout(checkoutRequest);
     }
 
     @DeleteMapping("/deleteProduct/{name}")
-    public ResponseEntity<String> deleteProduct (@PathVariable String numberInvoice)throws ApiException{
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteProduct(@PathVariable String numberInvoice) {
         checkoutService.deleteCheckout(numberInvoice);
-        return ResponseEntity.status(HttpStatus.OK).build();
     }
 }
