@@ -37,7 +37,7 @@ public class Checkout {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private long id;
 
     @Column(name = "total_price")
     private int totalPrice;

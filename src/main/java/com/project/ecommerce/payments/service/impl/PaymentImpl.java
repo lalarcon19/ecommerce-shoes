@@ -28,18 +28,22 @@ public class PaymentImpl implements PaymentService {
 
     @Override
     public void create(PaymentRequest paymentRequest) {
-        log.info("---- Creando metodo de pago. ----");
+        log.info("---- Se creara un metodo de pago. ----");
         UserEntity user = userRepository.findById(paymentRequest.getUserId());
 
+        log.info("Validando usuario...");
         if (user == null) {
             log.error("El usuario no existe.");
             throw new ApiException("El usuario no existe.", HttpStatus.BAD_REQUEST);
         }
 
+        log.info("---- Creando metodo de pago. ----");
+
         Payment payment = requestToPayment(paymentRequest);
         payment.setUser(user);
 
         paymentRepository.saveAndFlush(payment);
+        log.info("---- Metodo de pago creado. ----");
     }
 
     @Override
@@ -58,7 +62,7 @@ public class PaymentImpl implements PaymentService {
     public List<PaymentResponse> getAll() {
         List<Payment> payment = paymentRepository.findAll();
         if (payment.isEmpty()) {
-            log.info("No hay metodos de pago.");
+            log.info("---- No hay metodos de pago. ----");
             return Collections.emptyList();
         }
         return payment.stream()
@@ -68,11 +72,41 @@ public class PaymentImpl implements PaymentService {
 
     @Override
     public void update(PaymentRequest paymentRequest, long id) {
+        log.info("---- Actualizando metodo de pago. ----");
+        Optional<Payment> paymentOptional = paymentRepository.findById(id);
 
+        log.info("---- Validando el metodo de pago. ----");
+        if (paymentOptional.isEmpty()) {
+            log.error("---- El metodo de pago no existe. ----");
+            throw new ApiException("El metodo de pago no existe.", HttpStatus.BAD_REQUEST);
+        }
+        log.info("Actualizando...");
+
+        Payment payment = paymentOptional.get();
+        payment.setPaymentMethod(paymentRequest.getPaymentMethod());
+        payment.setFranchises(paymentRequest.getFranchises());
+        payment.setCardNumber(addAsteristk(paymentRequest.getCardNumber()));
+
+        paymentRepository.saveAndFlush(payment);
+
+        log.info("---- Se actualizo el metodo de pago ----");
     }
 
     @Override
     public void delete(long id) {
+        log.info("---- Metodo para eliminar un metodo de pago ----");
+        Optional<Payment> payment = paymentRepository.findById(id);
+
+        log.info("---- Validando el id: {} ----", id);
+        if (payment.isEmpty()) {
+            log.error("---- No existe el metodo de pago. ----");
+            throw new ApiException("No existe el metodo de pago", HttpStatus.BAD_REQUEST);
+        }
+
+        log.info("---- Se eliminara el metodo de pago. ----");
+        paymentRepository.delete(payment.get());
+
+        log.info("---- Se elimino el metodo de pago ----");
 
     }
 
@@ -94,7 +128,7 @@ public class PaymentImpl implements PaymentService {
     }
 
     public static String addAsteristk(String input) {
-        if (input == null ) {
+        if (input == null) {
             log.info("El numero debe ser mayor a 16 caracteres.");
             throw new ApiException("El numero debe ser mayor a 16 caracteres.", HttpStatus.BAD_REQUEST);
         }
@@ -102,8 +136,8 @@ public class PaymentImpl implements PaymentService {
         int stringLength = input.length();
         int longitud = stringLength - 4;
 
-        return String.format("%s%s%s", input.substring(0, 2),
+        return String.format("%s%s",
                 String.join("", Collections.nCopies(longitud, "*")),
-                input.substring(stringLength - 2, stringLength));
+                input.substring(stringLength - 4, stringLength));
     }
 }

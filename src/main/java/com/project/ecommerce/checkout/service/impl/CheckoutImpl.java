@@ -5,7 +5,6 @@ import com.project.ecommerce.checkout.dto.response.CheckoutResponse;
 import com.project.ecommerce.checkout.entity.Checkout;
 import com.project.ecommerce.checkout.respository.CheckoutRepository;
 import com.project.ecommerce.checkout.service.ICheckoutService;
-import com.project.ecommerce.payments.service.impl.PaymentImpl;
 import com.project.ecommerce.product.entity.Product;
 import com.project.ecommerce.product.respository.ProductRepository;
 import com.project.ecommerce.user.entity.UserEntity;
@@ -85,7 +84,7 @@ public class CheckoutImpl implements ICheckoutService {
         logger.info("---- Se obtuvieron las facturas guardadas ----");
 
         return listCheckout.stream()
-                .map(this::checkoutToResponse)
+                .map(CheckoutImpl::checkoutToResponse)
                 .collect(Collectors.toList());
     }
 
@@ -101,8 +100,7 @@ public class CheckoutImpl implements ICheckoutService {
         }
 
         logger.info("---- Se encontro factura {} en base de datos ----", numberInvoice);
-        Checkout checkout = checkoutEntity.get();
-        return checkoutToResponse(checkout);
+        return checkoutToResponse(checkoutEntity.get());
     }
 
     @Override
@@ -129,13 +127,12 @@ public class CheckoutImpl implements ICheckoutService {
                 .build();
     }
 
-    public CheckoutResponse checkoutToResponse(Checkout checkout) {
+    public static CheckoutResponse checkoutToResponse(Checkout checkout) {
         return CheckoutResponse.builder()
                 .id(checkout.getId())
                 .totalPrice(checkout.getTotalPrice())
                 .dateInvoice(checkout.getDateInvoice())
                 .description(checkout.getDescription())
-                .userId(userToResponse(checkout.getUser()))
                 .payment(paymentToResponse(checkout.getPayment()))
                 .build();
     }

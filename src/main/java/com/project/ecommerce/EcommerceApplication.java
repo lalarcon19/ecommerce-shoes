@@ -2,6 +2,7 @@ package com.project.ecommerce;
 
 import com.project.ecommerce.category.entity.Category;
 import com.project.ecommerce.category.repository.CategoryRepository;
+import com.project.ecommerce.user.util.DocumentType;
 import com.project.ecommerce.utils.enums.CategoryEnum;
 import com.project.ecommerce.product.entity.Product;
 import com.project.ecommerce.product.respository.ProductRepository;
@@ -53,6 +54,11 @@ public class EcommerceApplication {
 					.build();
 
 			UserEntity userPruebas = UserEntity.builder()
+					.name("admin")
+					.lastName("")
+					.document("123456789")
+					.documentType(DocumentType.CC)
+					.address("calle 100")
 					.username("admin")
 					.password(new BCryptPasswordEncoder().encode("1234"))
 					.isEnabled(true)
@@ -63,6 +69,11 @@ public class EcommerceApplication {
 					.build();
 
 			UserEntity userPruebas1 = UserEntity.builder()
+					.name("user")
+					.lastName("")
+					.document("123456888")
+					.documentType(DocumentType.CE)
+					.address("calle 100")
 					.username("user")
 					.password(new BCryptPasswordEncoder().encode("1234"))
 					.isEnabled(true)

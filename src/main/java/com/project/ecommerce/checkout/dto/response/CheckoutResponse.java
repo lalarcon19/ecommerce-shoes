@@ -18,7 +18,7 @@ import java.util.Date;
 @NoArgsConstructor
 @Builder
 public class CheckoutResponse {
-    private int id;
+    private Long id;
 
     private int totalPrice;
 

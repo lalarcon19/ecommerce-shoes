@@ -10,5 +10,5 @@ import java.util.List;
 @Setter
 public class AuthCreateRoleRequest {
     @Size(max = 3, message = "user cannot more than 3 roles")
-    private List<String> roleListName;
+    private List<String> roles;
 }

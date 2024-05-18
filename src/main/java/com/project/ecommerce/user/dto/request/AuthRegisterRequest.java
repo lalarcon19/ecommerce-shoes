@@ -4,8 +4,10 @@ import com.project.ecommerce.user.util.DocumentType;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
+@Setter
 public class AuthRegisterRequest {
 
     @NotBlank
@@ -22,6 +24,6 @@ public class AuthRegisterRequest {
     @NotBlank
     private String password;
     @Valid
-    private AuthCreateRoleRequest authCreateRoleRequest;
+    private AuthCreateRoleRequest rol;
 
 }
