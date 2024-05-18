@@ -12,11 +12,14 @@ import com.project.ecommerce.user.entity.UserEntity;
 import com.project.ecommerce.user.respository.UserRepository;
 import com.project.ecommerce.user.respository.RolesRepository;
 import com.project.ecommerce.user.service.UserService;
+import com.project.ecommerce.user.service.WishlistService;
 import com.project.ecommerce.user.util.JwtUtil;
 import com.project.ecommerce.utils.exception.ApiException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -43,13 +46,17 @@ import static com.project.ecommerce.payments.service.impl.PaymentImpl.paymentToR
 
 @Service
 @RequiredArgsConstructor
+@Log4j2
 public class UserImpl implements UserDetailsService, UserService {
 
-    public static final Logger logger = LoggerFactory.getLogger(UserImpl.class);
     private final UserRepository userRepository;
     private final RolesRepository rolesRepository;
     private final JwtUtil jwtUtil;
     private final PasswordEncoder passwordEncoder;
+    private final WishlistService wishlistService;
+
+    @Value("${email.regexp}")
+    private String regex;
 
     @Override
     public UserDetails loadUserByUsername(String username) {
@@ -89,19 +96,23 @@ public class UserImpl implements UserDetailsService, UserService {
 
     @Override
     public AuthResponse register(AuthRegisterRequest authRegisterRequest) {
-        logger.info("---El servidor ingresa al servicio para crear un usuario");
-        String username = authRegisterRequest.getUsername();
-        String password = authRegisterRequest.getPassword();
-        List<String> roles = authRegisterRequest.getRol().getRoles();
-        Set<Role> roleList = new HashSet<>(rolesRepository.findRoleEntitiesByRoleEnumIn(roles));
-        Optional<UserEntity> user = userRepository.findUserEntityByUsername(username);
+        log.info("---El servidor ingresa al servicio para crear un usuario");
+        String[] email = authRegisterRequest.getEmail().split("@");
+        List<String> roles = new ArrayList<>();
+        roles.add("USER");
+        Set<Role> roleSet = new HashSet<>(rolesRepository.findRoleEntitiesByRoleEnumIn(roles));
+        Optional<UserEntity> user = userRepository.findUserEntityByUsername(email[0]);
+
 
         if (user.isPresent()) {
+            log.error("----- El usuario ya existe. ------");
             throw new ApiException("El usuario ya existe.", HttpStatus.BAD_REQUEST);
         }
+        log.info("---- El usuario no existe ----");
 
-        if (roleList.isEmpty()) {
-            throw new ApiException("Role no exist.", HttpStatus.BAD_REQUEST);
+        if (roleSet.isEmpty()) {
+            log.error("----- El Rol no existe. ----");
+            throw new ApiException("El Rol no existe.", HttpStatus.BAD_REQUEST);
         }
 
         UserEntity userEntity = UserEntity.builder()
@@ -111,16 +122,20 @@ public class UserImpl implements UserDetailsService, UserService {
                 .documentType(authRegisterRequest.getDocumentType())
                 .document(authRegisterRequest.getDocument())
                 .address(authRegisterRequest.getAddress())
-                .username(username)
-                .password(new BCryptPasswordEncoder().encode(password))
-                .roles(roleList)
+                .username(email[0])
+                .password(new BCryptPasswordEncoder().encode(authRegisterRequest.getPassword()))
+                .roles(roleSet)
                 .isEnabled(true)
                 .accountNoLocked(true)
                 .accountNoExpired(true)
                 .credentialNoExpire(true)
                 .build();
+        log.info("---- Creando el usuario... ----");
 
         userRepository.saveAndFlush(userEntity);
+        log.info("---- Usuario creado. ----");
+
+        wishlistService.create(userEntity.getId());
 
         ArrayList<SimpleGrantedAuthority> authorities = new ArrayList<>();
 
@@ -132,6 +147,7 @@ public class UserImpl implements UserDetailsService, UserService {
         Authentication authentication = new UsernamePasswordAuthenticationToken(userEntity.getUsername(), userEntity.getPassword(), authorities);
 
         String accessToken = jwtUtil.createToken(authentication);
+        log.info("---- Generando token. ----");
 
         return new AuthResponse(userEntity.getUsername(), "successfully.", accessToken, true);
     }
@@ -139,10 +155,10 @@ public class UserImpl implements UserDetailsService, UserService {
     @Override
     public List<UserResponse> getAllUsers() {
         List<UserEntity> listUser = userRepository.findAll();
-        logger.info("---Entro al servicio para buscar usuarios registrados---");
+        log.info("----- Entro al servicio para buscar usuarios registrados. -----");
 
         if (listUser.isEmpty()) {
-            logger.info("---No hay usuarios registrados hasta el momento---");
+            log.info("---No hay usuarios registrados hasta el momento---");
             return Collections.emptyList();
         }
 
@@ -173,11 +189,11 @@ public class UserImpl implements UserDetailsService, UserService {
 
     @Override
     public void updateUser(long idUser, UserRequest userRequest) {
-        logger.info("---Entro al servicio para actualizar usuario---");
+        log.info("---Entro al servicio para actualizar usuario---");
         UserEntity user = userRepository.findById(idUser);
 
         if (user == null) {
-            logger.info(("---El usuario no fue encontrado para actualizar---"));
+            log.info(("---El usuario no fue encontrado para actualizar---"));
             throw new ApiException("No se encontro el usuario para actualizar", HttpStatus.NOT_FOUND);
         }
 
@@ -189,21 +205,21 @@ public class UserImpl implements UserDetailsService, UserService {
         user.setAddress(userRequest.getAddress());
         userRepository.saveAndFlush(user);
 
-        logger.info("---El usuario fue actualizado correctamente---");
+        log.info("---El usuario fue actualizado correctamente---");
     }
 
     @Override
     public void deleteUser(long id) {
-        logger.info("---Entro al servicio para eliminar usuario---");
+        log.info("---Entro al servicio para eliminar usuario---");
         UserEntity user = userRepository.findById(id);
 
-        if (user == null)  {
-            logger.info("---El usuario no existe----");
+        if (user == null) {
+            log.info("---El usuario no existe----");
             throw new ApiException("El usuario no existe", HttpStatus.NOT_FOUND);
         }
 
         userRepository.delete(user);
-        logger.info("---El usuario selecionado, fue eliminado correctamente---");
+        log.info("---El usuario selecionado, fue eliminado correctamente---");
     }
 
 

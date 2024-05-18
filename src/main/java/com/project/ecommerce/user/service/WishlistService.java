@@ -9,7 +9,7 @@ import java.util.List;
 @Service
 public interface WishlistService {
 
-    void create(int id);
+    void create(long id);
 
     void addProduct(WishlistRequest wishlistRequest);
 

@@ -3,7 +3,6 @@ package com.project.ecommerce.user.service.impl;
 import com.project.ecommerce.product.respository.ProductRepository;
 import com.project.ecommerce.product.service.impl.ProductImpl;
 import com.project.ecommerce.user.dto.request.WishlistRequest;
-import com.project.ecommerce.user.dto.response.UserResponse;
 import com.project.ecommerce.user.dto.response.WishlistResponse;
 import com.project.ecommerce.user.respository.WishlistRepository;
 import com.project.ecommerce.user.entity.Wishlist;
@@ -34,8 +33,8 @@ public class WishlistImpl implements WishlistService {
     private final UserRepository userRepository;
     private final ProductRepository productRepository;
 
-    //@Override
-    public void create(int id) {
+    @Override
+    public void create(long id) {
         logger.info("---- Creando lista de deseos ----");
         Wishlist wishlist = new Wishlist();
 

@@ -20,10 +20,6 @@ public class AuthRegisterRequest {
     private String document;
     private String address;
     @NotBlank
-    private String username;
-    @NotBlank
     private String password;
-    @Valid
-    private AuthCreateRoleRequest rol;
 
 }
