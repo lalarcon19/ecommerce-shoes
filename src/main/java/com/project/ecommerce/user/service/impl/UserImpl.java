@@ -1,5 +1,7 @@
 package com.project.ecommerce.user.service.impl;
 
+import com.project.ecommerce.checkout.service.impl.CheckoutImpl;
+import com.project.ecommerce.payments.entity.Payment;
 import com.project.ecommerce.user.dto.request.AuthLoginRequest;
 import com.project.ecommerce.user.dto.request.AuthRegisterRequest;
 import com.project.ecommerce.user.dto.request.UserRequest;
@@ -36,6 +38,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import static com.project.ecommerce.payments.service.impl.PaymentImpl.paymentToResponse;
 
 @Service
 @RequiredArgsConstructor
@@ -88,7 +92,7 @@ public class UserImpl implements UserDetailsService, UserService {
         logger.info("---El servidor ingresa al servicio para crear un usuario");
         String username = authRegisterRequest.getUsername();
         String password = authRegisterRequest.getPassword();
-        List<String> roles = authRegisterRequest.getAuthCreateRoleRequest().getRoleListName();
+        List<String> roles = authRegisterRequest.getRol().getRoles();
         Set<Role> roleList = new HashSet<>(rolesRepository.findRoleEntitiesByRoleEnumIn(roles));
         Optional<UserEntity> user = userRepository.findUserEntityByUsername(username);
 
@@ -101,6 +105,12 @@ public class UserImpl implements UserDetailsService, UserService {
         }
 
         UserEntity userEntity = UserEntity.builder()
+                .name(authRegisterRequest.getName())
+                .lastName(authRegisterRequest.getLastname())
+                .email(authRegisterRequest.getEmail())
+                .documentType(authRegisterRequest.getDocumentType())
+                .document(authRegisterRequest.getDocument())
+                .address(authRegisterRequest.getAddress())
                 .username(username)
                 .password(new BCryptPasswordEncoder().encode(password))
                 .roles(roleList)
@@ -137,7 +147,12 @@ public class UserImpl implements UserDetailsService, UserService {
         }
 
         return listUser.stream()
-                .map(UserImpl::userToResponse)
+                .map(user -> {
+                    if (user.getPayment() == null) {
+                        user.setPayment(new Payment());
+                    }
+                    return userToResponse(user);
+                })
                 .collect(Collectors.toList());
     }
 
@@ -147,6 +162,10 @@ public class UserImpl implements UserDetailsService, UserService {
 
         if (user == null) {
             throw new ApiException("El usuario no existe", HttpStatus.BAD_GATEWAY);
+        }
+
+        if (user.getPayment() == null) {
+            user.setPayment(new Payment());
         }
 
         return userToResponse(user);
@@ -211,6 +230,10 @@ public class UserImpl implements UserDetailsService, UserService {
                 .documentType(entity.getDocumentType())
                 .document(entity.getDocument())
                 .address(entity.getAddress())
+                .checkouts(entity.getCheckout().stream()
+                        .map(CheckoutImpl::checkoutToResponse)
+                        .collect(Collectors.toList()))
+                .payment(paymentToResponse(entity.getPayment()))
                 .build();
     }
 

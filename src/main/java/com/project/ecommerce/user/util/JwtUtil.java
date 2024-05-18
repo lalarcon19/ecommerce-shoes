@@ -6,9 +6,13 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.project.ecommerce.user.entity.UserEntity;
+import com.project.ecommerce.user.respository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
@@ -22,8 +26,12 @@ public class JwtUtil {
     private String privateKey;
     @Value("${security.jwt.user.generator}")
     private String userGenerator;
+    @Autowired
+    UserRepository userRepository;
 
     public String createToken (Authentication authentication) {
+        UserEntity user = userRepository.findUserEntityByUsername(authentication.getPrincipal().toString())
+                .orElseThrow(() -> new UsernameNotFoundException("El usuario no existe."));
         Algorithm algorithm = Algorithm.HMAC256(this.privateKey);
 
         String username = authentication.getPrincipal().toString();
@@ -39,6 +47,7 @@ public class JwtUtil {
                 .withExpiresAt(new Date(System.currentTimeMillis() + 1800000))
                 .withJWTId(UUID.randomUUID().toString())
                 .withNotBefore(new Date(System.currentTimeMillis()))
+                .withClaim("user_id", user.getId())
                 .sign(algorithm);
     }
 

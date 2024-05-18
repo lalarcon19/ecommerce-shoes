@@ -21,9 +21,10 @@ import java.util.List;
 @RequestMapping("/payment")
 @RequiredArgsConstructor
 public class PaymentController {
+
     private final PaymentService paymentService;
 
-    @GetMapping("/all")
+    @GetMapping("/getAll")
     @ResponseStatus(HttpStatus.OK)
     private List<PaymentResponse> getAll() {
         return paymentService.getAll();
