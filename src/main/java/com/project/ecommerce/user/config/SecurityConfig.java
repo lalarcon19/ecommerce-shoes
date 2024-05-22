@@ -39,6 +39,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(http -> {
                     //Configurar endpoints publico
                     http.requestMatchers(HttpMethod.POST, "/user/auth/**").permitAll();
+                    http.requestMatchers(HttpMethod.GET, "/product/**").permitAll();
 
                     //Configurar endpoints de usuario
                     http.requestMatchers(HttpMethod.GET, "/user/**").hasAuthority("READ");
@@ -46,7 +47,6 @@ public class SecurityConfig {
                     http.requestMatchers(HttpMethod.DELETE, "/user/**").hasRole("ADMIN");
 
                     //Configurar endpoints de producto
-                    http.requestMatchers(HttpMethod.GET, "/product/**").hasAuthority("READ");
                     http.requestMatchers(HttpMethod.POST, "/product/**").hasRole("ADMIN");
                     http.requestMatchers(HttpMethod.PUT, "/product/**").hasRole("ADMIN");
                     http.requestMatchers(HttpMethod.DELETE, "/product/**").hasRole("ADMIN");
@@ -59,7 +59,7 @@ public class SecurityConfig {
 
                     //Configurar endpoints de checkout
                     http.requestMatchers(HttpMethod.GET, "/checkout/**").hasAuthority("READ");
-                    http.requestMatchers(HttpMethod.POST, "/checkout/**").hasAuthority("CREATE");
+                    http.requestMatchers(HttpMethod.POST, "/checkout/**").hasAnyRole("USER", "ADMIN");
                     http.requestMatchers(HttpMethod.PUT, "/checkout/**").hasAuthority("UPDATE");
                     http.requestMatchers(HttpMethod.DELETE, "/checkout/**").hasRole("ADMIN");
 
@@ -71,8 +71,8 @@ public class SecurityConfig {
 
                     //Configurar endpoints de payment
                     http.requestMatchers(HttpMethod.GET, "/payment/**").hasAuthority("READ");
-                    http.requestMatchers(HttpMethod.POST, "/payment/**").hasAuthority("CREATE");
-                    http.requestMatchers(HttpMethod.PUT, "/payment/**").hasAuthority("UPDATE");
+                    http.requestMatchers(HttpMethod.POST, "/payment/**").hasAnyRole("USER", "ADMIN");
+                    http.requestMatchers(HttpMethod.PUT, "/payment/**").hasAnyRole("USER", "ADMIN");
                     http.requestMatchers(HttpMethod.DELETE, "/payment/**").hasRole("ADMIN");
 
                     //Configurar endpoints no especificados

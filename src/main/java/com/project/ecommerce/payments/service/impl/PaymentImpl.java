@@ -37,9 +37,17 @@ public class PaymentImpl implements PaymentService {
             throw new ApiException("El usuario no existe.", HttpStatus.BAD_REQUEST);
         }
 
-        log.info("---- Creando metodo de pago. ----");
+        log.info("---- Validando metodo de pago. ----");
 
-        Payment payment = requestToPayment(paymentRequest);
+        Payment payment = user.getPayment();
+        if (payment != null) {
+            log.error("El usuario ya tiene un metodo de pago asignado.");
+            throw new ApiException("El usuario ya tiene un metodo de pago asignado", HttpStatus.BAD_REQUEST);
+        }
+
+        log.info("---- Validando metodo de pago. ----");
+
+        payment = requestToPayment(paymentRequest);
         payment.setUser(user);
 
         paymentRepository.saveAndFlush(payment);
@@ -73,16 +81,15 @@ public class PaymentImpl implements PaymentService {
     @Override
     public void update(PaymentRequest paymentRequest, long id) {
         log.info("---- Actualizando metodo de pago. ----");
-        Optional<Payment> paymentOptional = paymentRepository.findById(id);
+        Payment payment = paymentRepository.findByUserId(id);
 
         log.info("---- Validando el metodo de pago. ----");
-        if (paymentOptional.isEmpty()) {
+        if (payment == null) {
             log.error("---- El metodo de pago no existe. ----");
             throw new ApiException("El metodo de pago no existe.", HttpStatus.BAD_REQUEST);
         }
         log.info("Actualizando...");
 
-        Payment payment = paymentOptional.get();
         payment.setPaymentMethod(paymentRequest.getPaymentMethod());
         payment.setFranchises(paymentRequest.getFranchises());
         payment.setCardNumber(addAsteristk(paymentRequest.getCardNumber()));

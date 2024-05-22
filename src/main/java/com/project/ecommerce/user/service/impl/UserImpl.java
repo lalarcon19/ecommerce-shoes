@@ -83,7 +83,8 @@ public class UserImpl implements UserDetailsService, UserService {
 
     @Override
     public AuthResponse login(AuthLoginRequest authLoginRequest) {
-        String username = authLoginRequest.username();
+        String[] email = authLoginRequest.username().split("@");
+        String username = email[0];
         String password = authLoginRequest.password();
 
         Authentication authentication = this.authenticate(username, password);
