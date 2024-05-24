@@ -55,9 +55,9 @@ public class ProductController {
         productService.update(id, request);
     }
 
-    @DeleteMapping("/delete/{name}")
+    @DeleteMapping("/delete/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable String name){
-        productService.delete(name);
+    public void delete(@PathVariable Long id){
+        productService.delete(id);
     }
 }

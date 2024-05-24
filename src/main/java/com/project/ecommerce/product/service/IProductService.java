@@ -18,6 +18,6 @@ public interface IProductService {
 
     void update(long id, ProductRequest productRequest);
 
-    void delete(String name);
+    void delete(Long id);
 
 }

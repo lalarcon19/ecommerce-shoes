@@ -108,9 +108,9 @@ public class ProductImpl implements IProductService {
     }
 
     @Override
-    public void delete(String name) {
+    public void delete(Long id) {
         logger.info("---- Entro al servicio para eliminar producto ----");
-        Optional<Product> productOptional = productRepository.findByName(name);
+        Optional<Product> productOptional = productRepository.findById(id);
 
         if (productOptional.isEmpty()) {
             logger.info("---- El producto ya no existe ----");
