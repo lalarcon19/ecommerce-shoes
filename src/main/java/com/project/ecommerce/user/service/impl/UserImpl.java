@@ -164,6 +164,7 @@ public class UserImpl implements UserDetailsService, UserService {
         }
 
         return listUser.stream()
+                .filter(UserEntity::isEnabled)
                 .map(user -> {
                     if (user.getPayment() == null) {
                         user.setPayment(new Payment());
@@ -211,16 +212,16 @@ public class UserImpl implements UserDetailsService, UserService {
 
     @Override
     public void deleteUser(long id) {
-        log.info("---Entro al servicio para eliminar usuario---");
+        log.info("---Entro al servicio para deshabilitar usuario---");
         UserEntity user = userRepository.findById(id);
 
         if (user == null) {
             log.info("---El usuario no existe----");
             throw new ApiException("El usuario no existe", HttpStatus.NOT_FOUND);
         }
-
-        userRepository.delete(user);
-        log.info("---El usuario selecionado, fue eliminado correctamente---");
+        user.setEnabled(false);
+        userRepository.saveAndFlush(user);
+        log.info("---El usuario selecionado, fue deshabilitado correctamente---");
     }
 
 
